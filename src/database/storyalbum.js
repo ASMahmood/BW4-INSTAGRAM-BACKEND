@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         autoIncrement: true,
       },
+      albumName: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
     },
     { timestamps: true }
   );

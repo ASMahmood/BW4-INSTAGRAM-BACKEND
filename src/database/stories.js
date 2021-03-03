@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
   );
   Story.associate = (models) => {
     Story.belongsTo(models.User);
-    Story.belongsTo(models.StoryAlbum);
+    Story.hasMany(models.StoryAlbum);
   };
   return Story;
 };
