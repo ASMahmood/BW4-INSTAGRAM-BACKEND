@@ -51,7 +51,9 @@ module.exports = function (socket) {
 
   //User logsout
   socket.on(LOGOUT, () => {
-    connectedUsers = removeUser(connectedUsers, socket.user.name);
+    connectedUsers = connectedUsers.filter(
+      (user) => user.userId !== socket.user.userId
+    );
     io.emit(USER_DISCONNECTED, connectedUsers);
     console.log("Disconnect", connectedUsers);
   });
@@ -101,18 +103,6 @@ function sendMessageToChat(sender) {
       createMessage({ message, sender })
     );
   };
-}
-
-/*
- * Removes user from the list passed in.
- * @param userList {Object} Object with key value pairs of Users
- * @param username {string} name of user to be removed
- * @return userList {Object} Object with key value pairs of Users
- */
-function removeUser(userList, username) {
-  let newList = Object.assign({}, userList);
-  delete newList[username];
-  return newList;
 }
 
 /*
