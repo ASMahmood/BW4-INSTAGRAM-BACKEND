@@ -2,26 +2,36 @@ const express = require("express");
 const Post = require("../../database").Post;
 const Comment = require("../../database").Comment;
 const SavedPost = require("../../database").SavedPost;
+const StoryAlbum = require("../../database").StoryAlbum;
 const User = require("../../database").User;
 
 const router = express.Router();
 
-router.post("/:postId", async (req, res) => {
+router.post("/:albumName/:storyId", async (req, res) => {
   try {
-    const savedpost = await SavedPost.findOne({
-      where: { userId: req.user.dataValues.id, postId: req.params.postId },
-    });
-    if (savedpost) {
-      await SavedPost.destroy({
-        where: { userId: req.user.dataValues.id, postId: req.params.postId },
-      });
-      res.status(201).send("Post Removed from Saved Posts!");
-    } else {
-      await SavedPost.create({
+    const storyInAlbum = await StoryAlbum.findOne({
+      where: {
+        albumName: req.params.albumName,
         userId: req.user.dataValues.id,
-        postId: req.params.postId,
+        storyId: req.params.storyId,
+      },
+    });
+    if (storyInAlbum) {
+      await StoryAlbum.destroy({
+        where: {
+          albumName: req.params.albumName,
+          userId: req.user.dataValues.id,
+          storyId: req.params.storyId,
+        },
       });
-      res.status(201).send("Post Saved!");
+      res.status(201).send("Story removed from Album!");
+    } else {
+      await StoryAlbum.create({
+        albumName: req.params.albumName,
+        userId: req.user.dataValues.id,
+        storyId: req.params.storyId,
+      });
+      res.status(201).send("Story added to Album!");
     }
   } catch (error) {
     console.log(error);
@@ -29,12 +39,20 @@ router.post("/:postId", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.get("/:userId/", async (req, res) => {
   try {
-    await SavedPost.destroy({
-      where: { userId: req.user.dataValues.id, postId: req.params.postId },
+    const albums = await StoryAlbum.findAll({
+      where: { userId: req.user.dataValues.id },
     });
-    res.send("savedpost removed");
+    const groupedAlbums = {};
+    await albums.forEach((album) => {
+      if (groupedAlbums[album.albumName]) {
+        groupedAlbums[album.albumName].push(album);
+      } else {
+        groupedAlbums[album.albumName] = [album];
+      }
+    });
+    res.send(groupedAlbums);
   } catch (error) {
     console.log(error);
     res.status(500).send("Something went bad!");

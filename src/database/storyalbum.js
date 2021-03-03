@@ -9,11 +9,15 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         autoIncrement: true,
       },
+      albumName: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
     },
     { timestamps: true }
   );
   StoryAlbum.associate = (models) => {
-    StoryAlbum.hasMany(models.Story);
+    StoryAlbum.belongsTo(models.Story);
     StoryAlbum.belongsTo(models.User);
   };
   return StoryAlbum;
