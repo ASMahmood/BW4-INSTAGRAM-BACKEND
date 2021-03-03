@@ -53,7 +53,6 @@ router.get("/:userId/", async (req, res) => {
       }
     });
     res.send(groupedAlbums);
-    res.send(albums);
   } catch (error) {
     console.log(error);
     res.status(500).send("Something went bad!");

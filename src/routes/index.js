@@ -11,6 +11,7 @@ const commentLikeRoute = require("./commentlikes");
 const storyRoute = require("./story");
 const savedPostRoute = require("./savedPosts");
 const storyAlbumRoute = require("./storyalbums");
+const taggedRoute = require("./tags");
 
 router.use("/users", userRoute);
 router.use("/posts", authenticate, postRoute);
@@ -22,4 +23,5 @@ router.use("/commentlike", authenticate, commentLikeRoute);
 router.use("/story", authenticate, storyRoute);
 router.use("/savedposts", authenticate, savedPostRoute);
 router.use("/storyalbums", authenticate, storyAlbumRoute);
+router.use("/tags", authenticate, taggedRoute);
 module.exports = router;

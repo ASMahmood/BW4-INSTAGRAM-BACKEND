@@ -5,6 +5,7 @@ const Comment = require("../../database").Comment;
 const Like = require("../../database").Like;
 const CommentLike = require("../../database").CommentLike;
 const Reply = require("../../database").Reply;
+const Tagged = require("../../database").Tagged;
 const multer = require("multer");
 const cloudinary = require("../../cloudinary");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
@@ -40,6 +41,7 @@ router.get("/", async (req, res) => {
         User,
         { model: Comment, include: [User, CommentLike, Reply] },
         Like,
+        Tagged,
       ],
     }); //.findAll RETURNS ALL OF THE Posts
     res.send(allPosts);
@@ -56,6 +58,7 @@ router.get("/:id", async (req, res) => {
         User,
         { model: Comment, include: [User, CommentLike, Reply] },
         Like,
+        Tagged,
       ],
     }); //.findByPk RETURNS THE Post WITH THE MATCHING ID
     res.send(singlePost);
