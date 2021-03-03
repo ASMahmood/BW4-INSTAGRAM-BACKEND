@@ -10,6 +10,7 @@ const followRoute = require("./follow");
 const commentLikeRoute = require("./commentlikes");
 const storyRoute = require("./story");
 const savedPostRoute = require("./savedPosts");
+const storyAlbumRoute = require("./storyalbums");
 
 router.use("/users", userRoute);
 router.use("/posts", authenticate, postRoute);
@@ -20,4 +21,5 @@ router.use("/follow", authenticate, followRoute);
 router.use("/commentlike", authenticate, commentLikeRoute);
 router.use("/story", authenticate, storyRoute);
 router.use("/savedposts", authenticate, savedPostRoute);
+router.use("/storyalbums", authenticate, storyAlbumRoute);
 module.exports = router;

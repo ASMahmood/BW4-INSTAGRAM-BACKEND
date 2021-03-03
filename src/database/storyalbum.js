@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     { timestamps: true }
   );
   StoryAlbum.associate = (models) => {
-    StoryAlbum.hasMany(models.Story);
+    StoryAlbum.belongsTo(models.Story);
     StoryAlbum.belongsTo(models.User);
   };
   return StoryAlbum;

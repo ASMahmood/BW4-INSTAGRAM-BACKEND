@@ -72,6 +72,27 @@ router.route("/login").post(async (req, res, next) => {
   }
 });
 
+router.get("/me", authenticate, async (req, res, next) => {
+  try {
+    const singleUser = await User.findByPk(req.user.dataValues.id, {
+      include: [
+        Post,
+        { model: Follow, include: [{ model: User, as: "following" }] },
+        { model: Follower, include: [{ model: User, as: "follower" }] },
+        Story,
+        StoryAlbum,
+        Tagged,
+        Message,
+        SavedPost,
+      ],
+    });
+    res.send(singleUser);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Something went wrong!");
+  }
+});
+
 router.get("/", authenticate, async (req, res) => {
   try {
     const allUser = await User.findAll({
