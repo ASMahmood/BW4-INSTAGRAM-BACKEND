@@ -36,7 +36,7 @@ const createChat = ({
     name = "Community",
     users = [],
 } = {}) => ({
-    id: uuidv4(),
+    id: uniqid(),
     name,
     messages,
     users,
