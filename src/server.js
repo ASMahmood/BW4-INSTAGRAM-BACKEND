@@ -7,17 +7,18 @@ const servicesRouter = require("./routes");
 dotenv.config();
 // const pass = require("./passport");
 const database = require("./database");
-
-//socket
-var app = require('http').createServer()
-var io = module.exports.io = require('socket.io')(app)
-const SocketManager = require('./socket.js')
-io.on('connection', SocketManager)
-
+const http = require("http");
 
 const port = process.env.PORT || 9001;
 
 const server = express();
+
+//socket
+const httpServer = http.createServer(server);
+const io = require("socket.io")(httpServer);
+module.exports = io;
+const SocketManager = require("./socket.js");
+io.on("connection", SocketManager);
 
 const whitelist = [
   "http://localhost:3000",
@@ -41,7 +42,7 @@ server.use(cookieParser());
 server.use(express.json());
 server.use("/insta", servicesRouter);
 database.sequelize.sync({ force: false }).then(() => {
-  server.listen(port, () => {
+  httpServer.listen(port, () => {
     console.log("running on port" + port);
   });
 });
