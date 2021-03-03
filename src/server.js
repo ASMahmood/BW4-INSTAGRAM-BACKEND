@@ -12,7 +12,11 @@ const port = process.env.PORT || 9001;
 
 const server = express();
 
-const whitelist = ["http://localhost:3000"];
+const whitelist = [
+  "http://localhost:3000",
+  "http://localhost:300/login",
+  "http://localhost:9001",
+];
 const corsOptions = {
   origin: (origin, callback) => {
     if (whitelist.indexOf(origin) !== -1 || !origin) {
