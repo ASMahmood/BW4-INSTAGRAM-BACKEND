@@ -1,6 +1,6 @@
 /** @format */
 
-const io = require("./server.js").io;
+const io = require("./server.js");
 
 const {
   VERIFY_USER,
@@ -14,9 +14,9 @@ const {
   PRIVATE_MESSAGE,
 } = require("./socket/Events");
 
-const { createMessage, createChat } = require("./socket/Factories");
+const { createMessage, createUser, createChat } = require("./socket/Factories");
 
-let connectedUsers = {};
+let connectedUsers = [];
 
 module.exports = function (socket) {
   console.log("Socket Id:" + socket.id);
@@ -32,14 +32,14 @@ module.exports = function (socket) {
     } else {
       callback({
         isUser: false,
-        user: createUser({ name: nickname, socketId: socket.id }),
+        user: createUser({ userId: nickname, socketId: socket.id }),
       });
     }
   });
 
   socket.on(USER_CONNECTED, (user) => {
     user.socketId = socket.id;
-    connectedUsers = addUser(connectedUsers, user);
+    connectedUsers.push(user);
     socket.user = user;
 
     sendMessageToChatFromUser = sendMessageToChat(user.name);
@@ -101,18 +101,6 @@ function sendMessageToChat(sender) {
       createMessage({ message, sender })
     );
   };
-}
-
-/*
- * Adds user to list passed in.
- * @param userList {Object} Object with key value pairs of users
- * @param user {User} the user to added to the list.
- * @return userList {Object} Object with key value pairs of Users
- */
-function addUser(userList, user) {
-  let newList = Object.assign({}, userList);
-  newList[user.name] = user;
-  return newList;
 }
 
 /*

@@ -1,5 +1,18 @@
-const uniqid = require('uniqid')
+const uniqid = require("uniqid");
 
+/*
+ *	createUser
+ *	Creates a user.
+ *	@prop id {string}
+ *	@prop name {string}
+ *	@param {object}
+ *		name {string}
+ */
+const createUser = ({ userId = "", socketId = null } = {}) => ({
+  id: uniqid(),
+  userId,
+  socketId,
+});
 /*
  *	createMessage
  *	Creates a messages object.
@@ -12,10 +25,10 @@ const uniqid = require('uniqid')
  *		sender {string}
  */
 const createMessage = ({ message = "", sender = "" } = {}) => ({
-    id: uniqid,
-    time: getTime(new Date(Date.now())),
-    message,
-    sender,
+  id: uniqid,
+  time: getTime(new Date(Date.now())),
+  message,
+  sender,
 });
 
 /*
@@ -32,15 +45,15 @@ const createMessage = ({ message = "", sender = "" } = {}) => ({
  *
  */
 const createChat = ({
-    messages = [],
-    name = "Community",
-    users = [],
+  messages = [],
+  name = "Community",
+  users = [],
 } = {}) => ({
-    id: uniqid(),
-    name,
-    messages,
-    users,
-    typingUsers: [],
+  id: uniqid(),
+  name,
+  messages,
+  users,
+  typingUsers: [],
 });
 
 /*
@@ -48,10 +61,11 @@ const createChat = ({
  *	@return a string represented in 24hr time i.e. '11:30', '19:30'
  */
 const getTime = (date) => {
-    return `${date.getHours()}:${("0" + date.getMinutes()).slice(-2)}`;
+  return `${date.getHours()}:${("0" + date.getMinutes()).slice(-2)}`;
 };
 
 module.exports = {
-    createMessage,
-    createChat,
+  createMessage,
+  createChat,
+  createUser,
 };
