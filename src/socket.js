@@ -13,6 +13,7 @@ const {
   TYPING,
   PRIVATE_MESSAGE,
   NOTIFICATION,
+  LIST,
 } = require("./socket/Events");
 
 const { createMessage, createUser, createChat } = require("./socket/Factories");
@@ -54,7 +55,7 @@ module.exports = function (socket) {
   //User logsout
   socket.on(LOGOUT, () => {
     connectedUsers = connectedUsers.filter(
-      (user) => user.userId !== socket.user.userId
+      (user) => user.userId !== socket.userId
     );
     io.emit(USER_DISCONNECTED, connectedUsers);
     console.log("Disconnect", connectedUsers);

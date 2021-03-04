@@ -21,11 +21,16 @@ const generateRoom = async (message, reciever, sender) => {
 
 const findRoom = async (reciever, sender) => {
   try {
-    const room = await Room.findOne({
+    const roomA = await Room.findOne({
       where: { roomName: `user${reciever}&user${sender}` },
     });
-    if (room) {
-      return room;
+    const roomB = await Room.findOne({
+      where: { roomName: `user${sender}&user${reciever}` },
+    });
+    if (roomA && !roomB) {
+      return roomA;
+    } else if (roomB && !roomA) {
+      return roomB;
     } else {
       return undefined;
     }
