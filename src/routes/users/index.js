@@ -20,6 +20,7 @@ const storage = new CloudinaryStorage({
 const cloudinaryMulter = multer({ storage: storage });
 const jwt = require("jsonwebtoken");
 const { authenticate, refreshToken } = require("../../authenticate");
+const { getAllUserChats } = require("../../socket/chatrooms");
 const router = require("express").Router();
 
 router.route("/register").post(async (req, res, next) => {
@@ -203,6 +204,16 @@ router.route("/refresh/token").post(async (req, res, next) => {
   } catch (error) {
     console.log(error);
     next(error);
+  }
+});
+
+router.get("/give/me/those/chats", authenticate, async (req, res) => {
+  try {
+    const allChats = await getAllUserChats(req.user.dataValues.id);
+    res.send(allChats);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("aw fuck");
   }
 });
 

@@ -15,6 +15,7 @@ const {
 } = require("./socket/Events");
 
 const { createMessage, createUser, createChat } = require("./socket/Factories");
+const { generateRoom, findRoom, addMessage } = require("./socket/chatrooms");
 
 let connectedUsers = [];
 
@@ -66,15 +67,16 @@ module.exports = function (socket) {
     sendTypingFromUser(chatId, isTyping);
   });
 
-  socket.on(PRIVATE_MESSAGE, ({ reciever, sender }) => {
-    if (reciever in connectedUsers) {
-      const newChat = createChat({
-        name: `${reciever}&${sender}`,
-        users: [reciever, sender],
-      });
-      const recieverSocket = connectedUsers[reciever].socketId;
-      socket.to(recieverSocket).emit(PRIVATE_MESSAGE, newChat);
-      socket.emit(PRIVATE_MESSAGE, newChat);
+  socket.on(PRIVATE_MESSAGE, async (data) => {
+    const Room = await findRoom(data.reciever, data.sender);
+    if (Room !== undefined) {
+      await addMessage(Room.messages, data.message, data.reciever, data.sender);
+    } else {
+      await generateRoom(data.message, data.reciever, data.sender);
+    }
+    if (connectedUsers.indexOf((user) => user.userId === data.reciever) < 0) {
+      const recieverSocket = connectedUsers[data.reciever].socketId;
+      socket.to(recieverSocket).emit(PRIVATE_MESSAGE, data);
     }
   });
 };
