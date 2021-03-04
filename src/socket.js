@@ -12,6 +12,7 @@ const {
   MESSAGE_SENT,
   TYPING,
   PRIVATE_MESSAGE,
+  NOTIFICATION,
 } = require("./socket/Events");
 
 const { createMessage, createUser, createChat } = require("./socket/Factories");
@@ -77,6 +78,16 @@ module.exports = function (socket) {
     if (connectedUsers.indexOf((user) => user.userId === data.reciever) < 0) {
       const recieverSocket = connectedUsers[data.reciever].socketId;
       socket.to(recieverSocket).emit(PRIVATE_MESSAGE, data);
+    }
+  });
+
+  socket.on(NOTIFICATION, async (data) => {
+    const user =
+      connectedUsers[
+        connectedUsers.indexOf((user) => user.userId === data.user)
+      ];
+    if (user) {
+      socket.to(user).emit(NOTIFICATION, data);
     }
   });
 };
