@@ -63,6 +63,7 @@ const getAllUserChats = async (userId) => {
     const userRooms = await allRooms.filter((room) =>
       room.roomName.split("&").indexOf(`user${userId}` > 0)
     );
+    console.log(userRooms);
     if (userRooms) {
       let allChats = [];
       await userRooms.forEach(async (room) => {
@@ -75,7 +76,7 @@ const getAllUserChats = async (userId) => {
         });
         chat.messageHistory = parsedMessages;
         allChats.push(chat);
-        console.log(parsedMessages);
+        console.log("USERS MESSAGES", parsedMessages);
       });
       console.log(allChats);
       return allChats;
@@ -93,13 +94,13 @@ const stringifyMessages = async (messages) => {
 };
 
 const parseMessages = async (messages) => {
-  console.log(messages);
+  console.log("STRING", messages);
   const messageArray = [];
-  messages.forEach(async (message) => {
+  await messages.forEach(async (message) => {
     const messageObj = await JSON.parse(message);
     messageArray.push(messageObj);
   });
-  console.log(messageArray);
+  console.log("OBJECT", messageArray);
   return messageArray;
 };
 

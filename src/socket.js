@@ -53,10 +53,11 @@ module.exports = function (socket) {
   });
 
   //User logsout
-  socket.on(LOGOUT, () => {
+  socket.on(LOGOUT, (data) => {
     connectedUsers = connectedUsers.filter(
-      (user) => user.userId !== socket.userId
+      (user) => user.userId !== data.userId
     );
+
     io.emit(USER_DISCONNECTED, connectedUsers);
     console.log("Disconnect", connectedUsers);
   });
@@ -76,8 +77,14 @@ module.exports = function (socket) {
     } else {
       await generateRoom(data.message, data.reciever, data.sender);
     }
-    if (connectedUsers.indexOf((user) => user.userId === data.reciever) < 0) {
-      const recieverSocket = connectedUsers[data.reciever].socketId;
+    console.log("------------", data);
+    console.log("/////////////////", connectedUsers);
+    const index = connectedUsers.indexOf(
+      (user) => user.userId === data.reciever
+    );
+    if (index !== -1) {
+      console.log("SENDING TO USER!");
+      const recieverSocket = connectedUsers[index].socketId;
       socket.to(recieverSocket).emit(PRIVATE_MESSAGE, data);
     }
   });
