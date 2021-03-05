@@ -79,9 +79,10 @@ module.exports = function (socket) {
     }
     console.log("------------", data);
     console.log("/////////////////", connectedUsers);
-    const index = connectedUsers.indexOf(
+    const index = connectedUsers.findIndex(
       (user) => user.userId === data.reciever
     );
+    console.log(index);
     if (index !== -1) {
       console.log("SENDING TO USER!");
       const recieverSocket = connectedUsers[index].socketId;
